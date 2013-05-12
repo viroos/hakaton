@@ -35,6 +35,9 @@ public class MyActivity extends Activity {
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
 
+    private static final int REQUEST_CODE_BUY = 0;
+
+
     /**
      * Called when the activity is first created.
      */
@@ -67,6 +70,8 @@ public class MyActivity extends Activity {
 
 
 
+
+
     }
 
     private void sendID(String id){
@@ -86,7 +91,9 @@ public class MyActivity extends Activity {
         httpClient.get("nfc/"+id, params, new AsyncCallback() {
             @Override
             public void onComplete(HttpResponse httpResponse) {
-                System.out.println(httpResponse.getBodyAsString());
+                String response = httpResponse.getBodyAsString();
+                Log.i("skasowano",response) ;
+                paid(100);
             }
             @Override
             public void onError(Exception e) {
@@ -97,6 +104,19 @@ public class MyActivity extends Activity {
         catch (Exception e){
           Log.e("fuck",e.toString());
         }
+    }
+
+
+    private void paid(int amount){
+        //upaid
+
+        BuyInterface inter = new BuyInterface(true, 34,"PartnerName", "merchant","6", amount);
+        // inter.setPhone("48123456789");
+        inter.setRegulationsLinkAndService("http://google.pl", "Google");
+        inter.setData("some additional data");
+        Intent intent = inter.getBuyIntent(this);
+        startActivityForResult(intent, REQUEST_CODE_BUY);
+
     }
 
 
