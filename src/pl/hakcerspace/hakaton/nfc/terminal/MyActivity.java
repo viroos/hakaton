@@ -1,5 +1,7 @@
 package pl.hakcerspace.hakaton.nfc.terminal;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import pl.upaid.api.android.BuyInterface;
 
 import android.app.Activity;
@@ -93,7 +95,17 @@ public class MyActivity extends Activity {
             public void onComplete(HttpResponse httpResponse) {
                 String response = httpResponse.getBodyAsString();
                 Log.i("skasowano",response) ;
-                paid(100);
+                JSONObject jsonResponse;
+                try {
+                    jsonResponse = new JSONObject(response);
+                    int total = (int)(jsonResponse.getDouble("total")*100);
+                    paid(total);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
             }
             @Override
             public void onError(Exception e) {
